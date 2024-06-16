@@ -6,9 +6,55 @@
     <title>beppe.online</title>
     <!--- <title>bvanroll.neocities</title> --->
     <link rel="stylesheet" href="main.css">
-    <script>
+    <!-- shader as bg via xemantic/shader-web-background -->
+    <script src="https://xemantic.github.io/shader-web-background/dist/shader-web-background.min.js"></script>
+    <script type="x-shader/x-fragment" id="image">
+      precision mediump float;
 
+      uniform float iTime;
+      uniform vec2 iResolution;
+
+      float fill(float x, float size) { return 1.-step(size, x); }
+
+      float circleSDF(vec2 st) { return length(st); }
+
+      void main() {
+        vec2 st = (gl_FragCoord.xy*2. - iResolution.xy)/iResolution.y;
+        vec3 color = vec3(0.0,0.0,0.0);
+        float alpha = 1.0;
+        float sp = iTime/8.;
+        float m = step(mod(sp*10.,2.),1.);
+        vec2 st2 = st;
+        //vec2 st2 = fract(st*10.)-.5;
+        vec2 u = vec2(1.);
+        u.x = step(mod(st2.y*10.,2.),1.)*2.-1.;
+        u.y = step(mod(st2.x*10.,2.),1.)*2.-1.;
+        st2.x += u.x*fract(sp*m);
+        st2.y += u.y*fract(sp*(1.-m));
+        st2 = fract(st2*10.)-.5;
+        st2 *= 2.;
+        float circle = (circleSDF(st2));
+        float circle2 = (circle);
+        color += fill(circle,.2);
+        color += fill(min(circle,circle2),.5);
+      
+        gl_FragColor = vec4(color, alpha);
+      }
     </script>
+    <script>
+      shaderWebBackground.shade({
+        shaders: {
+          image: {
+            uniforms: {
+              iTime: (gl, loc) => gl.uniform1f(loc, performance.now() /1000),
+              iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height)
+            }
+          }
+        }
+      });
+    </script>
+
+
   </head>
   <body>
     <div class="header">
