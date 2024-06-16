@@ -1,0 +1,29 @@
+body {
+  font-family: "arial";
+  background-color: #daf7a6; 
+  display: grid;
+}
+
+* {
+  font-family:"arial"
+}
+
+.header {
+  height: 10vh;
+  float: left;
+}
+
+.main_view {
+  width: 100vw;
+  height: 70vh;
+  margin-top: 10vh;
+  overflow-y: scroll;
+}
+
+.navbar_links {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.navbar_link {
+}
