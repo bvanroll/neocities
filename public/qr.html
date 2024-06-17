@@ -10,11 +10,19 @@
       const qrScanner = new QrScanner( videoElem, result => console.log('decoded qr code:', result),{},)
 
 </script>-->
+
+  </head>
+  <body>
+    <div id="reader" width="600px"></div>
+
     <script src="html5-qrcode.min.js"></script>
     <script>
       function onScanSuccess(decodedText, decodedResult) {
+        sessionStorage.setItem("customShader", decodedText);
         console.log(`Code matched = ${decodedText}`, decodedResult);
         alert(decodedText);
+        
+
       }
 
       function onScanFailure(error) {
@@ -25,11 +33,8 @@
         "reader",
         { fps: 10, qrbox: {width: 250, height: 250}},
         true /*verbose*/);
-      Html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    
     </script>
-  </head>
-  <body>
-    <div id="reader" width="600px"></div>
   </body>
 </html>

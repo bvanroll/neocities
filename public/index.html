@@ -55,18 +55,27 @@
       }
     </script>
     <script>
-      shaderWebBackground.shade({
-        shaders: {
-          image: {
-            uniforms: {
-              iTime: (gl, loc) => gl.uniform1f(loc, performance.now() /1000),
-              iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height)
+      function shade() {
+        shaderWebBackground.shade({
+          shaders: {
+            image: {
+              uniforms: {
+                iTime: (gl, loc) => gl.uniform1f(loc, performance.now() /1000),
+                iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height)
+              }
             }
           }
-        }
-      });
+        });
+      }
+      
+      newShader = sessionStorage.getItem("customShader");
+      if (newShader != null) {
+        console.log(newShader);
+        document.getElementById("image").innerHTML = newShader;
+      }
+      shade()
     </script>
-
+    
 
   </head>
   <body>
