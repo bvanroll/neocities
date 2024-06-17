@@ -14,6 +14,16 @@
       uniform float iTime;
       uniform vec2 iResolution;
 
+      const vec3 uAColor = vec3(.5,.5,.5);
+      const vec3 uBColor = vec3(.5,.5,.5);
+      const vec3 uCColor = vec3(1.,1.,1.);
+      const vec3 uDColor = vec3(.0,.33,.67);
+      
+      //get colors from http://dev.thi.ng/gradients/
+      vec3 cosPalette(float t) { return uAColor + uBColor*cos(6.28318*(uCColor*t+uDColor)); }
+
+
+
       float fill(float x, float size) { return 1.-step(size, x); }
 
       float circleSDF(vec2 st) { return length(st); }
@@ -35,9 +45,12 @@
         st2 *= 2.;
         float circle = (circleSDF(st2));
         float circle2 = (circle);
-        color += fill(circle,.2);
-        color += fill(min(circle,circle2),.5);
-      
+        float c = 0.;
+        c += fill(circle,.2);
+        c += fill(min(circle,circle2),.5);
+        float sx = sin(st.x*iTime)/2. +1.;
+        float sy = cos(st.y*iTime/2.)/2. +1.;
+        color = cosPalette(((sx+sy+iTime))/2.)*(step(1.,c)*.9 + .1);
         gl_FragColor = vec4(color, alpha);
       }
     </script>
