@@ -1,91 +1,119 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::{WebGlRenderingContext, WebGlShader, WebGlProgram};
-extern crate js_sys;
+use web_sys::{window, HtmlCanvasElement, WebGlRenderingContext as GL, WebGlRenderingContext};
 
-pub fn init_webgl_context(canvas_id: &str) -> Result<WebGlRenderingContext, JsValue> {
-    let document = web_sys::window().unwrap().document().unwrap();
-    let canvas = document.get_element_by_id(canvas_id).unwrap();
-    let canvas: web_sys::HtmlCanvasElement =  canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
-    let gl: WebGlRenderingContext = canvas.get_context("webgl")?
-        .unwrap()
-        .dyn_into::<WebGlRenderingContext>()
-        .unwrap();
+use yew::{html, Component, Context, Html, NodeRef};
 
-    gl.viewport(
-        0,
-        0,
-        canvas.width().try_into().unwrap(),
-        canvas.height().try_into().unwrap(),
-    );
 
-    Ok(gl);
+pub struct App {
+    node_ref: NodeRef,
 }
 
+impl Component for App {
+    type Message = ();
+    type Properties = ();
 
-// https://blog.logrocket.com/implement-webassembly-webgl-viewer-using-rust/#setup-environment
-pub fn create_shader(
-    gl: &WebGlRenderingContext,
-    shader_type: u32,
-    source: &str,
-) -> Result<WebGlShader, JsValue> {
-    let shader = gl.create_shader(shader_type)
-        .ok_or_else(|| JsValue::from_str("Unable to create shader object"))?;
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self {
+            node_ref: NodeRef::default(),
+        }
+    }
 
-    g..shader_source(&shader, source);
-    gl.compile_shader(&shader);
+    fn view(&self, _ctx: &Context<Self>) -> Html {
+        html! {
+            <canvas ref={self.node_ref.clone()} />
+        }
+    }
 
-    if gl.get_shader_parameter(&shader. WebGlRenderingContext::COMPILE_STATUS)
-        .as_bool().unwrap_or(false) {
-            Ok(shader)
-    } else {
-        Err(JsValue::from_str(&gl.get_shader_info_log(&shader).unwrap_or_else(|| "Unknown error creating shader".into()),
-        ))
+    fn rendered(&mut self, _ctx: &Context<Self>, first_renderer: bool) {
+        if !first_renderer {
+            return;
+        }
+
+        let canvas = self.node_ref.cast::<HtmlCanvasElement>().unwrap();
+        let gl: GL = canvas
+            .get_context("webgl")
+            .unwrap()
+            .unwrap()
+            .dyn_into()
+            .unwrap();
+        Self::render_gl(gl);
     }
 }
 
-
-pub fn setup_shaders(gl: &WebGlRenderingContext) -> Result<WebGlProgram, JsValue> {
-    let vertex_shader_source = "
-        attribute vec3 coordinates;
-        void main(void) {
-            gl_Position = vec4(coordinates, 1.0);
-        }
-        ";
-    let fragment_shader_source = "
-        precision mediump float;
-        uniform vec4 fragColor;
-        void main(void) {
-            gl_FragColor = fragColor;
-        }
-        ";
-    let vertex_shader = create_shader(
-        &gl,
-        WebGlRenderingContext::VERTEX_SHADER,
-        vertex_shader_source,
-    ).unwrap();
-    let fragment_shader = create_shader(
-        &gl,
-        WebGlRenderingContext::FRAGMENT_SHADER,
-        fragment_shader_source,
-    ).unwrap();
-
-    let shader_program = gl.create_program().unwrap();
-    gl.attach_shader(&shader_program, &vertex_shader);
-    gl.attach_shader(&shader_program, &fragment_shader);
-    gl.link_program(&shader_program);
-
-    if gl.get_program_parameter(&shader_program, WebGlRenderingContext::LINK_STATUS)
-        .as_bool()
-        .unwrap_or(false) {
-            g.use_program(Some(&shader_program));
-            Ok(shader_program);
-    } else {
-        return Err(JsValue::from_str(
-                &gl.get_program_info_log(&shader_program)
-                .unwrap_or_else(|| "Unknown error linking program".into()),
-        ));
+impl App {
+    fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+        window()
+            .unwrap()
+            .request_animation_frame(f.as_ref().unchecked_ref())
+            .expect("should register `requestAnimationFrame` OK");
     }
+
+    fn render_gl(gl: WebGlRenderingContext) {
+
+        let mut timestamp = 0.0;
+
+        let vert_code = include_str!("./basic.vert");
+        let frag_code = include_str!("./basic.frag");
+
+        let vertices: Vec<f32> = vec![
+            -1.0, -1.0, 
+            1.0, -1.0, 
+            -1.0, 1.0,
+            -1.0, 1.0,
+            1.0, -1.0,
+            1.0, 1.0,
+        ];
+        let vertex_buffer = gl.create_buffer().unwrap();
+        let verts = js_sys::Float32Array::from(vertices.as_slice());
+
+        gl.bind_buffer(GL::ARRAY_BUFFER, Some(&vertex_buffer));
+        gl.buffer_data_with_array_buffer_view(GL::ARRAY_BUFFER, &verts, GL::STATIC_DRAW);
+
+        let vert_shader = gl.create_shader(GL::VERTEX_SHADER).unwrap();
+        gl.shader_source(&vert_shader, vert_code);
+        gl.compile_shader(&vert_shader);
+
+        let frag_shader = gl.create_shader(GL::FRAGMENT_SHADER).unwrap();
+        gl.shader_source(&frag_shader, frag_code);
+        gl.compile_shader(&frag_shader);
+
+        let shader_program = gl.create_program().unwrap();
+        gl.attach_shader(&shader_program, &vert_shader);
+        gl.attach_shader(&shader_program, &frag_shader);
+        gl.link_program(&shader_program);
+
+        gl.use_program(Some(&shader_program));
+
+        let position = gl.get_attrib_location(&shader_program, "a_position") as u32;
+        gl.vertex_attrib_pointer_with_i32(position, 2, GL::FLOAT, false, 0, 0);
+        gl.enable_vertex_attrib_array(position);
+
+        let time = gl.get_uniform_location(&shader_program, "u_time");
+        gl.uniform1f(time.as_ref(), timestamp as f32);
+
+        gl.draw_arrays(GL::TRIANGLES, 0, 6);
+
+        let cb = Rc::new(RefCell::new(None));
+
+        *cb.borrow_mut() = Some(Closure::wrap(Box::new({
+            let cb = cb.clone();
+            move || {
+                timestamp += 20.0;
+                gl.uniform1f(time.as_ref(), timestamp as f32);
+                gl.draw_arrays(GL::TRIANGLES, 0, 6);
+                App::request_animation_frame(cb.borrow().as_ref().unwrap());
+            }
+        }) as Box<dyn FnMut()>));
+
+        App::request_animation_frame(cb.borrow().as_ref().unwrap());
+    }
+
 }
 
-
+fn main() {
+    yew::Renderer::<App>::new().render();
+}
