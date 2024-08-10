@@ -74,6 +74,13 @@
         document.getElementById("image").innerHTML = newShader;
       }
       //shade()
+      function load_img() {
+        import * as img from 'img/'
+        for var i=0;i<img.length;i++) {
+          document.querySelector("iamge-container").innerHTML+=('<img src='+igm[i].src);
+          // via https://stackoverflow.com/a/61382627
+        }
+      }
     </script>
     
 
@@ -90,6 +97,21 @@
         </ul>
       </nav>--->
     </div> 
+    <div class="links">
+      <h2>My links:</h2>
+      <p>discord: @beppe (i got so lucky getting this)</p>
+      <a href="">steam</a>
+      <a href="">github</a>
+      <a href="">tiktok</a>
+      <a href="">twitter</a>
+    </div>
+    <div class="content">
+      <h2> my """art""" </h2>
+      <p>A while ago i got gifted an ipad mini by a family member, so out of interest i borrowed my sisters pencil and fell in love with learning how to draw. Drawing for some reason made me really statisfied/happy. So since then i've kept drawing (we're 2 months in now at the time of writing this) and really enjoyed it ever since. 
+
+      Here are some of the results: </p>
+      <div class="image-container"></div>
+    </div>
     <!--<iframe src="home.html" name="main" title="main" class="main_view"></iframe> -->
   </body>
 </html>
