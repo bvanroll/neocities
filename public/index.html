@@ -56,6 +56,12 @@
     </script>
     <script>
       import * as img from 'img/'
+      function load_img() {
+        for var i=0;i<img.length;i++) {
+          document.querySelector("iamge-container").innerHTML+=('<img src='+igm[i].src);
+          // via https://stackoverflow.com/a/61382627
+        }
+      }
       function shade() {
         shaderWebBackground.shade({
           shaders: {
@@ -75,12 +81,6 @@
         document.getElementById("image").innerHTML = newShader;
       }
       //shade()
-      function load_img() {
-        for var i=0;i<img.length;i++) {
-          document.querySelector("iamge-container").innerHTML+=('<img src='+igm[i].src);
-          // via https://stackoverflow.com/a/61382627
-        }
-      }
     </script>
     
 
