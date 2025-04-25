@@ -6,5 +6,5 @@ do
   timestamp=`git log --format=%ad --date=format:'%Y-%m-%d' -- $entry`
   t+="{\"dest\"=$filename,\"time\"=$timestamp},"
 done
-echo "value=${t%?}]"
+echo "${t%?}]"
 

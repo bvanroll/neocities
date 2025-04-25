@@ -29,7 +29,8 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           echo "<ul class=posts>" > public/posts.html 
-          ./compile.sh >> "$GITHUB_OUTPUT"
+          test=$(./compile.sh)
+        echo "::set-output name=matrix::$test"
       - name: check matrix
         run: |
           echo "${{ steps.matrix.outputs.value }}"
