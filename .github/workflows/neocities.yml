@@ -42,6 +42,8 @@ jobs:
         value: ${{fromJSON(needs.setup.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v4
+        run: |
+          touch ${{ github.workspace}}/public/posts/${{ matrix.value.time }}_${ matrix.value.dest }}
       - name: markdown to html 
         uses: jaywcjlove/markdown-to-html-cli@main 
         with:
