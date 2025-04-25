@@ -54,7 +54,7 @@ jobs:
           github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
 
   deploy:
-    needs: [ build ]
+    needs: [ setup, build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
