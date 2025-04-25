@@ -44,7 +44,7 @@ jobs:
       - name: markdown to html 
         uses: jaywcjlove/markdown-to-html-cli@main 
         with:
-          source: notes/${{ matrix.value.dest }}.md
+          source: "notes/${{ matrix.value.dest }}.md"
           output: public/posts/${{ matrix.value.time }}_${{ matrix.value.dest }}.html
           github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
       - name: generate posts.html entries
