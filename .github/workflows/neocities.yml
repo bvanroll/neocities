@@ -62,6 +62,7 @@ jobs:
           genhtml: ${{ needs.setup.outputs.genhtml }}
         run: |
           echo "$genhtml" > ${{ github.workspace}}/public/posts.html
+          echo $genhtml
           #TODO this turns up empty right now. gotta figure that shit out i think
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
