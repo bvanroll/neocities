@@ -18,18 +18,21 @@ jobs:
     runs-on: ubuntu-latest 
     outputs: 
       matrix: ${{ steps.matrix.outputs.matrix }}
+      genhtml: ${{ steps.genhtml.outputs.genhtml }}
     steps:
       - uses: actions/checkout@v4
       - name: create matrix
         id: matrix
         run: |
           cd ${{ github.workspace }}
-          echo "<ul class=posts>" > public/posts.html 
           test=$(./compile.sh)
           echo "matrix=$test" >> $GITHUB_OUTPUT
-      - name: check posts.html
+      - name: genhtml
+        id: genhtml
         run: |
-          cat public/posts.html
+          cd ${{ github.workspace }} 
+          test=$(./genhtml.sh)
+          echo "genhtml=$test" >> $GITHUB_OUTPUT
           
   build:
     needs: [ setup ]
@@ -48,10 +51,6 @@ jobs:
           source: ${{ matrix.value.source }}
           output: ${{ matrix.value.dest }}
           github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
-      - name: generate posts.html entries
-        run: 
-          echo "<li class=\"post\"><a href=\"${{ matrix.value.dest }}\">${{ matrix.value.name }}</a></li>" >> public/posts.html
-          cat public/posts.html
 
   deploy:
     needs: [ build ]
@@ -59,9 +58,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: finish posts.html 
+        env:
+          genhtml: ${{ needs.setup.outputs.genhtml }}
         run: |
-          echo "</ul>" >> ${{ github.workspace }}/public/posts.html
-          cat ${{ github.workspace }}/public/posts.html
+          echo "$genhtml" > ${{ github.workspace}}/public/posts.html
           #TODO this turns up empty right now. gotta figure that shit out i think
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
