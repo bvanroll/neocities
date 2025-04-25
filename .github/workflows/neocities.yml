@@ -49,6 +49,7 @@ jobs:
     needs: [ setup, build ]
     runs-on: ubuntu-latest
     steps:
+      - run: npm i markdown-to-html-cli -g
       - uses: actions/checkout@v4
       - name: finish posts.html 
         env:
@@ -56,6 +57,17 @@ jobs:
         run: |
           cd ${{github.workspace}}
           ./genhtml.sh > public/posts.html
+      - run: |
+          cd ${{github.workspace}}
+          for entry in notes/*
+          do
+            filename=$(basename "$entry" .md)
+            timestamp=`git log --format=%ad --date=format:'%Y-%m-%d' -- $entry`
+            dest="public/posts/$timestamp"
+            dest+="_$filename"
+            dest+=".html"
+            markdown-to-html --source $entry --output $dest
+          done
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
         with: 
