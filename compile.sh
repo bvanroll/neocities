@@ -7,7 +7,7 @@ do
   dest="public/posts/$timestamp"
   dest+="_$filename"
   dest+=".html"
-  t+="{\"source\":\"$entry\",\"dest\":\"$dest\",\"time\":\"$timestamp\"},"
+  t+="{\"source\":\"$entry\",\"name\":\"$filename\",\"dest\":\"$dest\",\"time\":\"$timestamp\"},"
 done
 echo "${t%?}]"
 

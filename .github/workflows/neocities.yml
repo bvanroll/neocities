@@ -49,7 +49,7 @@ jobs:
           github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
       - name: generate posts.html entries
         run: 
-          echo "<li class=\"post\"><a href=\"${{ matrix.value.time }}_${{ matrix.value.dest }}\">${{ matrix.value.dest }}</a></li>" >> public/posts.html
+          echo "<li class=\"post\"><a href=\"${{ matrix.value.dest }}\">${{ matrix.value.name }}</a></li>" >> public/posts.html
 
   deploy:
     needs: [ build ]
@@ -59,7 +59,7 @@ jobs:
       - name: finish posts.html 
         run: |
           echo "</ul>" >> ${{ github.workspace }}/public/posts.html
-
+          #TODO this turns up empty right now. gotta figure that shit out i think
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
         with: 
