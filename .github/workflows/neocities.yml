@@ -23,6 +23,7 @@ jobs:
     outputs: 
       matrix: ${{ steps.matrix.outputs.value }}
     steps:
+      - uses: actions/checkout@v4
       - name: generate posts.html
         run: |
           ls -la ${{ github.workspace }}
@@ -40,6 +41,7 @@ jobs:
       matrix: 
         value: ${{fromJSON(needs.setup.outputs.matrix)}}
     steps:
+      - uses: actions/checkout@v4
       - name: markdown to html 
         uses: jaywcjlove/markdown-to-html-cli@main 
         with:
@@ -54,10 +56,10 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: finish posts.html 
         run: |
           echo "</ul>" >> ${{ github.workspace }}public/posts.html
-      - uses: actions/checkout@v4
 
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
