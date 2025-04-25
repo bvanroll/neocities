@@ -24,11 +24,14 @@ jobs:
       matrix: ${{ steps.matrix.outputs.value }}
     steps:
       - uses: actions/checkout@v4
-      - run: |
+      - name: create matrix
+        id: matrix
+        run: |
           cd ${{ github.workspace }}
           echo "<ul class=posts>" > public/posts.html 
           ./compile.sh >> "$GITHUB_OUTPUT"
-      - run: |
+      - name: check matrix
+        run: |
           echo "${{ steps.matrix.outputs.value }}"
   build:
     needs: [ setup ]
