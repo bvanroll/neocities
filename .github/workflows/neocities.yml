@@ -24,15 +24,11 @@ jobs:
       matrix: ${{ steps.matrix.outputs.value }}
     steps:
       - uses: actions/checkout@v4
-      - name: generate posts.html
-        run: |
-          ls -la ${{ github.workspace }}
       - run: |
           cd ${{ github.workspace }}
           echo "<ul class=posts>" > public/posts.html 
-          ./compile.sh
+          ./compile.sh >> $GITHUB_OUTPUT
       - run: |
-
           echo "${{ steps.matrix.outputs.value }}"
   build:
     needs: [ prep_array ]
