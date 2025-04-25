@@ -14,39 +14,7 @@ concurrency:
 
 
 jobs:
-  #  setup:
-  #    runs-on: ubuntu-latest 
-  #    outputs: 
-  #      matrix: ${{ steps.matrix.outputs.matrix }}
-  #    steps:
-  #      - uses: actions/checkout@v4
-  #      - name: create matrix
-  #        id: matrix
-  #        run: |
-  #          cd ${{ github.workspace }}
-  #          test=$(./compile.sh)
-  #          echo "matrix=$test" >> $GITHUB_OUTPUT
-  #          
-  #  build:
-  #    needs: [ setup ]
-  #    runs-on: ubuntu-latest
-  #    strategy:
-  #      matrix: 
-  #        value: ${{fromJSON(needs.setup.outputs.matrix)}}
-  #    steps:
-  #      - uses: actions/checkout@v4
-  #      #- run: |
-  #      #    cd ${{ github.workspace }}
-  #      #    touch ${{ matrix.value.dest }}
-  #      - name: markdown to html 
-  #        uses: jaywcjlove/markdown-to-html-cli@main 
-  #        with:
-  #          source: ${{ matrix.value.source }}
-  #          output: ${{ matrix.value.dest }}
-  #          github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
-
   deploy:
-    #needs: [ setup, build ]
     runs-on: ubuntu-latest
     steps:
       - run: npm i markdown-to-html-cli -g
@@ -66,7 +34,7 @@ jobs:
             dest="public/posts/$timestamp"
             dest+="_$filename"
             dest+=".html"
-            markdown-to-html --markdown-style-theme light --source $entry --output $dest
+            markdown-to-html --no-dark-mode false --markdown-style-theme light --source $entry --output $dest
           done
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
