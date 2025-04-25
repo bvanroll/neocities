@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: generate posts.html
         run: |
-          ls
+          ls -la ${{ github.workspace }}
       - run: |
           cd ${{ github.workspace }}
           echo "<ul class=posts>" > public/posts.html 
