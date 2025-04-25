@@ -27,9 +27,10 @@ jobs:
           echo "<ul class=posts>" > public/posts.html 
           test=$(./compile.sh)
           echo "matrix=$test" >> $GITHUB_OUTPUT
-      - name: check matrix
+      - name: check posts.html
         run: |
-          echo "${{ steps.matrix.outputs.value }}"
+          cat public/posts.html
+          
   build:
     needs: [ setup ]
     runs-on: ubuntu-latest
@@ -50,6 +51,7 @@ jobs:
       - name: generate posts.html entries
         run: 
           echo "<li class=\"post\"><a href=\"${{ matrix.value.dest }}\">${{ matrix.value.name }}</a></li>" >> public/posts.html
+          cat public/posts.html
 
   deploy:
     needs: [ build ]
@@ -59,6 +61,7 @@ jobs:
       - name: finish posts.html 
         run: |
           echo "</ul>" >> ${{ github.workspace }}/public/posts.html
+          cat ${{ github.workspace }}/public/posts.html
           #TODO this turns up empty right now. gotta figure that shit out i think
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
