@@ -11,24 +11,20 @@ body {
 
 a:link {
   color: black;
-  text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
 }
 
 a:visited {
-  color: black;
-  text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  color: #111;
 }
 
 
 a:hover {
-  color: black;
-  text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  color: #111;
 }
 
 
 a:active {
-  color: black;
-  /*text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;*/
+  color: #111;
 }
 
 * {
