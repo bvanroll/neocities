@@ -43,12 +43,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          touch ${{ github.workspace}}/public/posts/${{ matrix.value.time }}_${ matrix.value.dest }}
+          touch ${{ github.workspace.source }}
       - name: markdown to html 
         uses: jaywcjlove/markdown-to-html-cli@main 
         with:
-          source: "notes/${{ matrix.value.dest }}.md"
-          output: public/posts/${{ matrix.value.time }}_${{ matrix.value.dest }}.html
+          source: ${{ matrix.value.source }}
+          output: ${{ matrix.value.dest }}
           github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
       - name: generate posts.html entries
         run: 
