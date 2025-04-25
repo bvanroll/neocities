@@ -19,13 +19,43 @@ concurrency:
 
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
+  prep_array:
+    runs-on: ubuntu-latest 
+    outputs: 
+      matrix: ${{ steps.matrix.outputs.value }}
     steps:
-      - uses: actions/checkout@v4
-      - name: test
+      - name: generate posts.html
+        run: |
+          echo "<ul class=posts>" > public/posts.html 
+      - id: matrix 
         run: ./compile.sh
+      - run: |
+          echo "${{ steps.matrix.outputs.value }}"
+  build:
+    needs: [ prep_array ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: 
+        value: ${{fromJSON(needs.setup.outputs.matrix)}}
+    steps:
+      - name: markdown to html 
+        uses: jaywcjlove/markdown-to-html-cli@main 
+        with:
+          source: ${{ matrix.value.source }}
+          output: public/posts/${{ matrix.value.time }}_${{ matrix.value.dest }}.html
+          github-corners: https://github.com/jaywcjlove/markdown-to-html-cliA
+      - name: generate posts.html entries
+        run: 
+          echo "<li class=\"post\"><a href=\"${{ matrix.value.time }}_${{ matrix.value.dest }}\">${{ matrix.value.dest }}</a></li>" >> public/posts.html
+
+  deploy:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: finish posts.html 
+        run: |
+          echo "</ul>" >> public/posts.html
+      - uses: actions/checkout@v4
 
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
