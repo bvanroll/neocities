@@ -52,6 +52,10 @@ a:active {
   width: 30%;
 }
 
+iframe {
+  width: 100%;
+}
+
 .navbar_link {
   width: 100%;
 }
