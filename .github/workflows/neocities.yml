@@ -30,7 +30,7 @@ jobs:
           cd ${{ github.workspace }}
           echo "<ul class=posts>" > public/posts.html 
           test=$(./compile.sh)
-        echo "::set-output name=matrix::$test"
+          echo "::set-output name=matrix::$test"
       - name: check matrix
         run: |
           echo "${{ steps.matrix.outputs.value }}"
