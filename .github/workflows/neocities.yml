@@ -31,7 +31,7 @@ jobs:
       - run: |
           echo "${{ steps.matrix.outputs.value }}"
   build:
-    needs: [ prep_array ]
+    needs: [ setup ]
     runs-on: ubuntu-latest
     strategy:
       matrix: 
