@@ -2,9 +2,13 @@
 t='['
 for entry in notes/*
 do 
+  echo $entry
   filename=$(basename "$entry" .md)
-  timestamp=`git log --follow --format=%ad --date=format:'%Y-%m-%d' -- $entry`
-  t+="{\"source\"=\"$entry\",\"dest\"=\"$filename\",\"time\"=\"$timestamp\"},"
+  echo $filename
+  timestamp=`git log --format=%ad --date=format:'%Y-%m-%d' -- $entry`
+  echo $timestamp
+  t+="{\"dest\"=\"$filename\",\"time\"=\"$timestamp\"},"
+  echo $t
 done
-echo "value=${t%?}]"
+echo "value=${t%?} ]"
 
