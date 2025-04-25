@@ -26,6 +26,7 @@ jobs:
       - name: generate posts.html
         run: |
           ls
+      - run: |
           touch public/posts.html
           echo "<ul class=posts>" > public/posts.html 
       - id: matrix 
