@@ -1,8 +1,11 @@
+
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
+
 body {
-  font-family: "arial";
+  font-family: "Fira Code", monospace;
   color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
-  display: grid;
+  /*text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;*/
+  /*display: grid;*/
   background: #333;
 }
 
@@ -25,16 +28,15 @@ a:hover {
 
 a:active {
   color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;
+  /*text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;*/
 }
 
 * {
-  font-family:"arial"
 }
 
 .header {
-  height: 10vh;
-  float: left;
+  /*height: 10vh;*/
+  /*float: left;*/
 }
 
 .main_view {
@@ -45,9 +47,11 @@ a:active {
 }
 
 .navbar_links {
-  display: grid;
-  grid-template-columns: auto auto;
+  /*display: grid;*/
+  /*grid-template-columns: auto auto;*/
+  width: 30%;
 }
 
 .navbar_link {
+  width: 100%;
 }
