@@ -43,6 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
+          cd ${{ github.workspace }}
           touch ${{ matrix.value.dest }}
       - name: markdown to html 
         uses: jaywcjlove/markdown-to-html-cli@main 
