@@ -18,7 +18,7 @@ concurrency:
 
 
 jobs:
-  prep_array:
+  setup:
     runs-on: ubuntu-latest 
     outputs: 
       matrix: ${{ steps.matrix.outputs.value }}
@@ -27,7 +27,7 @@ jobs:
       - run: |
           cd ${{ github.workspace }}
           echo "<ul class=posts>" > public/posts.html 
-          ./compile.sh >> $GITHUB_OUTPUT
+          ./compile.sh > $GITHUB_OUTPUT
       - run: |
           echo "${{ steps.matrix.outputs.value }}"
   build:
