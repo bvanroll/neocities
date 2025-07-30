@@ -7,85 +7,41 @@
     <!--- <title>bvanroll.neocities</title> --->
     <link rel="stylesheet" href="main.css">
     <!-- shader as bg via xemantic/shader-web-background -->
-    <style>
-
-    </style>
-    <script src="https://xemantic.github.io/shader-web-background/dist/shader-web-background.min.js"></script>
-    <script type="x-shader/x-fragment" id="image">
-      precision mediump float;
-
-      uniform float iTime;
-      uniform vec2 iResolution;
-
-      const vec3 uAColor = vec3(.5,.5,.5);
-      const vec3 uBColor = vec3(.5,.5,.5);
-      const vec3 uCColor = vec3(1.,1.,1.);
-      const vec3 uDColor = vec3(.0,.33,.67);
-      
-      //get colors from http://dev.thi.ng/gradients/
-      vec3 cosPalette(float t) { return uAColor + uBColor*cos(6.28318*(uCColor*t+uDColor)); }
+      <script src="https://xemantic.github.io/shader-web-background/dist/shader-web-background.min.js"></script>
+      <script type="x-shader/x-fragment" id="image">
+        precision highp float;
+        uniform float iTime;
 
 
+        void main() {
 
-      float fill(float x, float size) { return 1.-step(size, x); }
-
-      float circleSDF(vec2 st) { return length(st); }
-
-      void main() {
-        vec2 st = (gl_FragCoord.xy*2. - iResolution.xy)/iResolution.y;
-        vec3 color = vec3(0.0,0.0,0.0);
-        float alpha = 1.0;
-        float sp = iTime/8.;
-        float m = step(mod(sp*10.,2.),1.);
-        vec2 st2 = st;
-        //vec2 st2 = fract(st*10.)-.5;
-        vec2 u = vec2(1.);
-        u.x = step(mod(st2.y*10.,2.),1.)*2.-1.;
-        u.y = step(mod(st2.x*10.,2.),1.)*2.-1.;
-        st2.x += u.x*fract(sp*m);
-        st2.y += u.y*fract(sp*(1.-m));
-        st2 = fract(st2*10.)-.5;
-        st2 *= 2.;
-        float circle = (circleSDF(st2));
-        float circle2 = (circle);
-        float c = 0.;
-        c += fill(circle,.2);
-        c += fill(min(circle,circle2),.5);
-        float sx = sin(st.x*iTime)/2. +1.;
-        float sy = cos(st.y*iTime/2.)/2. +1.;
-        color = cosPalette(((sx+sy+iTime))/2.)*(step(1.,c)*.9 + .1);
-        gl_FragColor = vec4(color, alpha);
-      }
-    </script>
-    <script>
-      import * as img from 'img/'
-      function load_img() {
-        for var i=0;i<img.length;i++) {
-          document.querySelector("iamge-container").innerHTML+=('<img src='+igm[i].src);
-          // via https://stackoverflow.com/a/61382627
+    float r=abs(sin(iTime));
+    float g=abs(cos(iTime/3.));
+    float b=abs(sin(iTime)*cos(iTime)/2.);
+    float a=1.;
+        gl_FragColor = vec4(r,g,b,a);
         }
-      }
-      function shade() {
-        shaderWebBackground.shade({
-          shaders: {
-            image: {
-              uniforms: {
-                iTime: (gl, loc) => gl.uniform1f(loc, performance.now() /1000),
-                iResolution: (gl, loc, ctx) => gl.uniform2f(loc, ctx.width, ctx.height)
-              }
-            }
-          }
-        });
-      }
+      </script>
+      <script>
+         shaderWebBackground.shade({
+           shaders: {
+             image: {
+               uniforms: {
+                 iTime: (gl, loc) => gl.uniform1f(loc,performance.now()/1000)
+               }
+             }
+           }
+         });
+      </script>
+      <style>
+.shader-web-background-fallback{
+  background: url("https://placekitten.com/666/666");
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
       
-      newShader = sessionStorage.getItem("customShader");
-      if (newShader != null) {
-        console.log(newShader);
-        document.getElementById("image").innerHTML = newShader;
-      }
-      //shade()
-    </script>
-    
+      </style>
 
   </head>
   <body>
@@ -99,20 +55,26 @@
           <li class="navbar_link" ><a href="qr.html" >qr code thing that loads glsl shaders</a></li>
         </ul>
     </div> 
-    <div class="links">
-      <h2>my links/contact:</h2>
+    <div class="sidebar">
+      <h2>my links:</h2>
       <p><a href="mailto:beppe.vanrolleghem@gmail.com">my email</a> probably the best way to get in contact with me</p>
-      <p><a href="https://www.tiktok.com/@bvanroll">tiktok</a> my fav social media, mostly posting what i draw on there, another good way to get in contact with me</p>
-      <p><a href="https://steamcommunity.com/id/bvanroll/">steam</a> Gamers tend to be pretty toxic so most of the things on here are set to private, but if you wanna see what games i enjoy it's pretty good</p>
+      <p><a href="https://www.tiktok.com/@bvanroll">tiktok</a> i sometimes post drawings/sketches</p> 
+      <p><a href="https://steamcommunity.com/id/bvanroll/">steam</a> reviews and just to see what i've been playing :p</p>
+      <p><a href="https://listenbrainz.org/user/beppev/">listenbrainz</a> just what i've been listening to</p>
       <p><a href="https://letterboxd.com/beppev/">letterboxd</a> i should watch more movies</p>
-      <p>discord: @beppe (i got so lucky getting this, also i rarely use this at this point)</p>
       <p><a href="https://github.com/bvanroll">github</a> (don't look at my bad code :( )</p>
     </div>
     <div class="content">
 
     <h2> what's coming </h2>
-    <p> i really wanna make a shader that emulates my "boxes" i've been drawing recently and use it as the background for this page. It's gonna be a wip but i think it's gonna be really cool if i can get it to work. I hope i can do it in 2d emulating 3d but i might have to do the 3d shader thing that i'm dreading</p>
-    <p> also i really wanna make a way for me to make posts about my thoughts. but i have no clue how to do it easily. Ideally i'd be able to upload from my phone. gotta figure something out for that.</p>
+   
+    <p>
+    I wanna spice up the website, but i'm really bad at doing visual stuff. at least when it's not code based. so maybe i'll write some code that makes the site look cooler :p 
+    </p>
+    <p>
+    also i wanna make it so my pico8 games are playable in the browser here on a seperate page. so i'm gonna work on that too.
+
+    </p>
 
     <iframe src="posts.html" name="posts" title="posts"></iframe>
     <p><a href="posts.html" target="posts">return</a></p>
