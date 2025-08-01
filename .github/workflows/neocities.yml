@@ -24,7 +24,7 @@ jobs:
           genhtml: ${{ needs.setup.outputs.genhtml }}
         run: |
           cd ${{github.workspace}}
-          ./genhtml.sh > public/posts.html
+          ./gen_posts.sh > public/posts.html
       - run: |
           cd ${{github.workspace}}
           for entry in notes/*
@@ -36,6 +36,12 @@ jobs:
             dest+=".html"
             markdown-to-html --no-dark-mode false --markdown-style-theme light --source $entry --output $dest
           done
+      - name: gen_pico8
+        run: |
+          cd ${{github.worpskace}}
+          ./gen_games.sh >> public/gaming.html 
+          echo " </body></html> " >> public/gaming.html
+        
       - name: Deploy to neocities 
         uses: bcomnes/deploy-to-neocities@v1
         with: 
