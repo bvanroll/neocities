@@ -6,7 +6,7 @@ body {
   color: black;
   /*text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;*/
   /*display: grid;*/
-  /*background: #333;*/
+  background: #2e2828;
 }
 
 a:link {
@@ -81,8 +81,19 @@ iframe {
 }
 
 * {
-  width: 90%;
   
+}
+
+#queen {
+  width: 20em;
+
+}
+
+#susie {
+  height: 5em;
+}
+
+#glados {
 }
 
 iframe {
@@ -97,3 +108,15 @@ iframe {
   .content {width:100%}
 
 }
+
+footer {
+  display: inline-block;
+  width: 90%;
+  margin-left: 5%;
+  border:2px;
+  margin-top: 5em;
+  img {
+
+  }
+}
+
