@@ -4,6 +4,7 @@
 body {
   font-family: "Fira Code", monospace;
   color: black;
+  padding: 2em;
   /*text-shadow: -1px -1px 0 #000, 1px -1px #000, -1px 1px #000, 1px 1px #000;*/
   /*display: grid;*/
   background: #2e2828;
@@ -34,23 +35,21 @@ a:active {
   /*height: 10vh;*/
   /*float: left;*/
   text-align: center;
-  background: white;
+  background: #DDD;
   border-radius: 16px;
   width:100%;
   padding:1em;
   padding-left: .2em;
   padding-right:.2em;
-  opacity: .8;
 }
 
 .sidebar {
   width:20%;
   float: left;
-  background: white;
+  background: #DDD;
   border-radius:16px;
   padding:1em;
   margin-top: 2em;
-  opacity: .8;
   
 }
 
@@ -58,10 +57,9 @@ a:active {
  float: right;
  width: 70%;
  margin-top: 2em;
- background: white;
+ background: #DDD;
  padding:1em;
  border-radius: 16px;
-  opacity: .8;
 }
 
 
@@ -86,6 +84,11 @@ iframe {
 
 #queen {
   width: 20em;
+  border: black;
+  padding: .3em;
+  border-style: double;
+  background: white;
+
 
 }
 
@@ -111,10 +114,12 @@ iframe {
 
 footer {
   display: inline-block;
-  width: 90%;
-  margin-left: 5%;
-  border:2px;
+  width: 98%;
+  border-radius: 16px;
+  padding:1em;
+  margin-left: 0%;
   margin-top: 5em;
+  background: #DDD;
   img {
 
   }
